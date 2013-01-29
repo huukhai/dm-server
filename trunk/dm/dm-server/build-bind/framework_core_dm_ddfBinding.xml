@@ -1,0 +1,63 @@
+<binding xmlns:ns1="http://funambol.com/framework/core/dm/ddf" xmlns:ns2="http://funambol.com/framework/core">
+  <namespace uri="http://funambol.com/framework/core/dm/ddf" default="elements" prefix="ns1"/>
+  <mapping abstract="true" type-name="ns1:devDetail" class="com.funambol.framework.core.dm.ddf.DevDetail">
+    <value style="element" name="uriMaxDepth" field="uriMaxDepth" usage="optional"/>
+    <value style="element" name="uriMaxLen" field="uriMaxLen" usage="optional"/>
+    <value style="element" name="uriMaxSegLen" field="uriMaxSegLen" usage="optional"/>
+    <value style="element" name="devTyp" field="devTyp" usage="optional"/>
+    <value style="element" name="oem" field="oem" usage="optional"/>
+    <value style="element" name="fwVersion" field="fwVersion" usage="optional"/>
+    <value style="element" name="swVersion" field="swVersion" usage="optional"/>
+    <value style="element" name="hwVersion" field="hwVersion" usage="optional"/>
+    <value style="element" name="lrgObj" field="lrgObj" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.dm.ddf.DevDetail" name="devDetail">
+    <structure map-as="ns1:devDetail"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns1:devInfo" class="com.funambol.framework.core.dm.ddf.DevInfo">
+    <value style="element" name="devId" field="devId" usage="optional"/>
+    <value style="element" name="man" field="man" usage="optional"/>
+    <value style="element" name="mod" field="mod" usage="optional"/>
+    <value style="element" name="dmV" field="dmV" usage="optional"/>
+    <value style="element" name="lang" field="lang" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.dm.ddf.DevInfo" name="devInfo">
+    <structure map-as="ns1:devInfo"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns1:mgmtTree" class="com.funambol.framework.core.dm.ddf.MgmtTree">
+    <collection field="treeNodes" usage="optional">
+      <structure map-as="ns1:node" name="treeNode"/>
+    </collection>
+    <structure map-as="ns2:verDTD" field="verDTD" usage="optional" name="verDTD"/>
+    <value style="element" name="man" field="man" usage="optional"/>
+    <value style="element" name="mod" field="mod" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.dm.ddf.MgmtTree" name="mgmtTree">
+    <structure map-as="ns1:mgmtTree"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns1:node" class="com.funambol.framework.core.dm.ddf.Node">
+    <value style="element" name="name" field="name" usage="optional"/>
+    <value style="element" name="path" field="path" usage="optional"/>
+    <collection field="subNodes" usage="optional">
+      <structure map-as="ns1:node" name="subNode"/>
+    </collection>
+    <value style="element" name="value" field="value" usage="optional"/>
+    <structure map-as="ns1:RTProperties" field="rtProperties" usage="optional" name="rtProperties"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.dm.ddf.Node" name="node">
+    <structure map-as="ns1:node"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns1:RTProperties" class="com.funambol.framework.core.dm.ddf.RTProperties">
+    <value style="element" name="acl" field="acl" usage="optional"/>
+    <value style="element" name="format" field="format" usage="optional"/>
+    <value style="element" name="name" field="name" usage="optional"/>
+    <value style="element" name="size" field="size" usage="optional"/>
+    <value style="element" name="title" field="title" usage="optional"/>
+    <value style="element" name="tStamp" field="tStamp" usage="optional"/>
+    <value style="element" name="type" field="type" usage="optional"/>
+    <value style="element" name="verNo" field="verNo" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.dm.ddf.RTProperties" name="RTProperties">
+    <structure map-as="ns1:RTProperties"/>
+  </mapping>
+</binding>

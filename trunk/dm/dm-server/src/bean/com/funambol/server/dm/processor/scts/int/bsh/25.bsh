@@ -1,0 +1,171 @@
+/*
+ * Funambol is a mobile platform developed by Funambol, Inc.
+ * Copyright (C) 2011 Funambol, Inc.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License version 3 as published by
+ * the Free Software Foundation with the addition of the following permission
+ * added to Section 15 as permitted in Section 7(a): FOR ANY PART OF THE COVERED
+ * WORK IN WHICH THE COPYRIGHT IS OWNED BY FUNAMBOL, FUNAMBOL DISCLAIMS THE
+ * WARRANTY OF NON INFRINGEMENT  OF THIRD PARTY RIGHTS.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, see http://www.gnu.org/licenses or write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301 USA.
+ *
+ * You can contact Funambol, Inc. headquarters at 643 Bair Island Road, Suite
+ * 305, Redwood City, CA 94063, USA, or at email address info@funambol.com.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU Affero General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU Affero General Public License
+ * version 3, these Appropriate Legal Notices must retain the display of the
+ * "Powered by Funambol" logo. If the display of the logo is not reasonably
+ * feasible for technical reasons, the Appropriate Legal Notices must display
+ * the words "Powered by Funambol".
+ */
+
+
+/**
+ *
+ *
+ *
+ *
+ * @version $Id: 25.bsh,v 1.4 2007-06-19 08:16:10 luigiafassina Exp $
+ */
+
+import java.util.*;
+
+import com.funambol.framework.core.*;
+import com.funambol.framework.core.dm.ddf.*;
+import com.funambol.framework.engine.dm.*;
+
+void init() {
+  log.info("bsh: Management script initialization");
+}
+
+void getNextOperations() {
+
+  log.info("bsh: getManagementOperation!");
+
+  // Creating new node with name, path, subnodes, format, value
+  // Creating new node with name, path, subnodes, RTProperties, value
+
+  // Creating new RTProperties with: acl, format, name, size, title, tStamp, type, verNo
+
+  RTProperties rtpAcc = new RTProperties(null, "node", null, null, null, null, "org.openmobilealliance/1.0/w7", null);
+
+  Node funambolAcc = new Node("FunambolAcc", ".", null, rtpAcc, null);
+
+
+  Node appId = new Node("AppID", null, null, "chr", "w7");
+  funambolAcc.addNode(appId);
+
+  Node serverId = new Node("ServerID", null, null, "chr", "FunambolID");
+  funambolAcc.addNode(serverId);
+
+  Node appAddrNode = new Node("AppAddr", null, null, "node", null);
+  funambolAcc.addNode(appAddrNode);
+
+  Node funambolAddr = new Node("FunambolAddr", null, null, "node", null);
+  appAddrNode.addNode(funambolAddr);
+
+  Node addrType = new Node("AddrType", null, null, "chr", "URI");
+  funambolAddr.addNode(addrType);
+
+  Node addrPort = new Node("Port", null, null, "node", null);
+  funambolAddr.addNode(addrPort);
+
+  Node funambolPort = new Node("FunambolPort", null, null, "node", null);
+  addrPort.addNode(funambolPort);
+
+  Node portNbr = new Node("PortNbr", null, null, "chr", "8080");
+  funambolPort.addNode(portNbr);
+
+/*
+  Node appAuth = new Node("AppAuth", null, null, "node", null);
+  funambolAcc.addNode(appAuth);
+
+  Node authFunambolServer = new Node("funambolServer", null, null, "node", null);
+  appAuth.addNode(authFunambolServer);
+
+  Node serverAuthType = new Node("AAuthType", null, null, "chr", "BASIC");
+  authFunambolServer.addNode(serverAuthType);
+
+  Node serverAuthSecret = new Node("AAuthSecret", null, null, "chr", "srvpwd");
+  authFunambolServer.addNode(serverAuthSecret);
+
+  Node serverAuthLevel = new Node("AAuthLevel", null, null, "chr", "SRVCRED");
+  authFunambolServer.addNode(serverAuthLevel);
+
+  Node serverAuthName = new Node("AAuthName", null, null, "chr", "funambol");
+  authFunambolServer.addNode(serverAuthName);
+
+  Node authFunambolClient = new Node("funambolClient", null, null, "node", null);
+  appAuth.addNode(authFunambolClient);
+
+  Node clientAuthType = new Node("AAuthType", null, null, "chr", "BASIC");
+  authFunambolClient.addNode(clientAuthType);
+
+  Node clientAuthSecret = new Node("AAuthSecret", null, null, "chr", "funambol");
+  authFunambolClient.addNode(clientAuthSecret);
+
+  Node clientAuthLevel = new Node("AAuthLevel", null, null, "chr", "CLCRED");
+  authFunambolClient.addNode(clientAuthLevel);
+
+  Node clientAuthName = new Node("AAuthName", null, null, "chr", "funambol");
+  authFunambolClient.addNode(clientAuthName);
+*/
+
+  MgmtTree mgmtTree = new MgmtTree(new Node[] { funambolAcc }, new VerDTD("1.2"), null, null);
+
+  HashMap nodes = new HashMap();
+
+  nodes.put("./Inbox", mgmtTree);
+
+  o = new AddManagementOperation();
+  o.nodes = nodes;
+  if (cont) {
+    operations = new ManagementOperation[] { o };
+    cont = false;
+  } else {
+    operations = new ManagementOperation[0];
+  }
+}
+
+void setOperationResults() {
+  log.info("bsh: setOperationResults!");
+
+  for (result: results) {
+    log.info("bsh: status code: " + result.statusCode);
+    log.info("bsh: for: " + result.nodes);
+  }
+  dmstate.state = DeviceDMState.STATE_COMPLETED;
+
+}
+
+void setGenericAlerts(){
+  int numAlerts = genericAlerts.length;
+  log.info("bsh: setGenericAlerts! (num. alerts: " + numAlerts + ")");
+
+  for (int i=0; i<numAlerts; i++) {
+      log.info("Alert[" + i + "]: " + Util.toXML(genericAlerts[i]));
+  }
+}
+
+void endSession(int code) {
+  log.info("bsh: endSession with code: " + (char)code);
+}
+
+
+log.info("bsh: Global script!");
+
+cont = true;
