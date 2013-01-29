@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.4.2" class="java.beans.XMLDecoder">
+ <object class="com.funambol.server.engine.dm.ScriptManagementProcessor">
+  <void property="name">
+   <string>TestManagementProcessor</string>
+  </void>
+  <void property="scriptFile">
+     <string>com/funambol/server/dm/processor/scts/int/bsh/14.bsh</string>
+  </void>
+ </object>
+</java>

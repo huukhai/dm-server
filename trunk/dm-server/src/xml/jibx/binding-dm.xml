@@ -1,0 +1,37 @@
+<binding>
+
+    <mapping name="wap-provisioningdoc" class="com.funambol.framework.core.dm.bootstrap.WapProvisioningDoc" extends="java.lang.Object">
+        <value style="attribute" name="version" field="version"/>
+
+        <collection field="characteristics" usage="optional">
+            <structure value-style="element" type="com.funambol.framework.core.dm.bootstrap.Characteristic" />
+        </collection>
+
+    </mapping>
+
+
+    <mapping name="characteristic" class="com.funambol.framework.core.dm.bootstrap.Characteristic" extends="java.lang.Object">
+        <value style="attribute" name="type" field="type" />
+
+        <collection field="children" usage="optional">
+            <structure value-style="element" type="java.lang.Object" />
+        </collection>
+
+    </mapping>
+
+
+    <mapping name="parm" class="com.funambol.framework.core.dm.bootstrap.Parm" extends="java.lang.Object">
+        <value style="attribute" name="name"  field="name" />
+        <value style="attribute" name="value" field="value"/>
+    </mapping>
+
+
+    <mapping abstract="true" class="java.lang.Object" />
+
+
+</binding>
+
+
+
+
+
