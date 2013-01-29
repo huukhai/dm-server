@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.4.1_01" class="java.beans.XMLDecoder">
+ <object class="com.funambol.framework.server.store.PersistentStoreManager">
+  <void property="jndiDataSourceName">
+    <string>java:jboss/datasources/FunambolDMDS</string>
+  </void>
+  <void property="stores">
+   <array class="java.lang.String" length="3">
+     <void index="0">
+      <string>com.funambol.server.store.SyncPersistentStore</string>
+     </void>
+     <void index="1">
+      <string>com/funambol/server/store/EnginePersistentStore.xml</string>
+     </void>
+     <void index="2">
+      <string>com/funambol/server/store/ModulesPersistentStore.xml</string>
+     </void>
+   </array>
+  </void>
+ </object>
+</java>
