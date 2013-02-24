@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+
+<!-- ===================================================================
+
+Ant build file for JiBX data binding code to schema starter example.
+
+=================================================================== -->
+<!--
+<project basedir="." default="help">
+-->
+<project basedir="." default="help">
+  
+  <!-- The following block is intended to set the jibx-home location. It first
+   checks the relative location of the JiBX libraries when this starter example
+   is run directly from the JiBX distribution, then (if that fails), looks for
+   an environmental variable JIBX_HOME with the installation path. If you prefer
+   to just set the path directly in this file, uncomment the following line and
+   set the value to the appropriate directory, then delete the rest of the Ant
+   commands down to the end of this block. -->
+<!--  <property name="jibx-home" value="jibx-home-directory-path"/> -->
+  <available file="../../lib/jibx-bind.jar" property="jibx-home" value="../.."/>
+  <property environment="env"/>
+  <condition property="jibx-home" value="${env.JIBX_HOME}">
+    <and>
+      <not>
+        <isset property="jibx-home"/>
+      </not>
+      <available file="${env.JIBX_HOME}/lib"/>
+    </and>
+  </condition>
+  <!-- End of jibx-home location setting block. -->
+  
+  <!-- make sure required jars are present -->
+  <condition property="runtime-jars-found">
+    <available file="${jibx-home}/lib/jibx-run.jar"/>
+  </condition>
+  <condition property="binding-jars-found">
+    <and>
+      <available file="${jibx-home}/lib/bcel.jar"/>
+      <available file="${jibx-home}/lib/jibx-bind.jar"/>
+      <available file="${jibx-home}/lib/jibx-run.jar"/>
+    </and>
+  </condition>
+  <available property="extras-jar-found" file="${jibx-home}/lib/jibx-extras.jar"/>
+  
+  <!-- set classpath for compiling and running application with JiBX -->
+  <path id="classpath">
+    <fileset dir="${jibx-home}/lib" includes="*.jar"/>
+    <pathelement location="bin"/>
+  </path>
+  
+  <!-- make sure runtime jars are present -->
+  <target name="check-runtime">
+    <fail unless="jibx-home">JiBX home directory not found - define JIBX_HOME system property or set path directly in build.xml file.</fail>
+    <fail unless="runtime-jars-found">Required JiBX runtime jar jibx-run.jar was not found in JiBX home lib directory (${jibx-home}/lib)</fail>
+  </target>
+  
+  <!-- make sure extras jars are present -->
+  <target name="check-extras" depends="check-runtime">
+    <fail unless="extras-jar-found">Required JiBX extras jar jibx-extras.jar was not found in JiBX home lib directory (${jibx-home}/lib)</fail>
+  </target>
+  
+  <!-- make sure binding jars are present -->
+  <target name="check-binding" depends="check-runtime">
+    <fail unless="binding-jars-found">Required JiBX binding jar jibx-bind.jar or bcel.jar was not found in JiBX home lib directory (${jibx-home}/lib)</fail>
+  </target>
+  
+  <!-- clean compiled class files and output file -->
+  <target name="clean">
+    <delete quiet="true" dir="${basedir}/bin"/>
+    <delete quiet="true" file="${basedir}/binding.xml"/>
+    <delete quiet="true">
+      <fileset dir="${basedir}" includes="out*.xml"/>
+      <fileset dir="${basedir}" includes="*.xsd"/>
+    </delete>
+  </target>
+  
+  <!-- compile the classes -->
+  <target name="compile" depends="clean,check-runtime">
+  
+    <echo message="Compiling Java source code"/>
+    <delete quiet="true" dir="${basedir}/bin"/>
+    <mkdir dir="${basedir}/bin"/>
+    <javac srcdir="${basedir}/src" destdir="${basedir}/bin" debug="on">
+      <classpath refid="classpath"/>
+    </javac>
+    
+  </target>
+  
+  <!-- generate default binding and schema -->
+  <target name="bindgen">
+
+    <echo message="Running BindGen tool"/>
+    <java classpathref="classpath" fork="true" failonerror="true"
+        classname="org.jibx.binding.generator.BindGen">
+      <arg value="-s"/>
+      <arg value="${basedir}/../src/java"/>
+
+<arg value="com.funambol.framework.core.AbstractCommand"/>
+<arg value="com.funambol.framework.core.Add"/>
+<arg value="com.funambol.framework.core.Alert"/>
+<arg value="com.funambol.framework.core.Anchor"/>
+<arg value="com.funambol.framework.core.Atomic"/>
+<arg value="com.funambol.framework.core.Authentication"/>
+<arg value="com.funambol.framework.core.Chal"/>
+<arg value="com.funambol.framework.core.CmdID"/>
+<arg value="com.funambol.framework.core.ComplexData"/>
+<arg value="com.funambol.framework.core.ContentTypeInfo"/>
+<arg value="com.funambol.framework.core.ContentTypeParameter"/>
+<arg value="com.funambol.framework.core.Copy"/>
+<arg value="com.funambol.framework.core.Cred"/>
+<arg value="com.funambol.framework.core.CTCap"/>
+<arg value="com.funambol.framework.core.CTPropParam"/>
+<arg value="com.funambol.framework.core.CTType"/>
+<arg value="com.funambol.framework.core.CTTypeSupported"/>
+<arg value="com.funambol.framework.core.Data"/>
+<arg value="com.funambol.framework.core.DataStore"/>
+<arg value="com.funambol.framework.core.Delete"/>
+<arg value="com.funambol.framework.core.DevInf"/>
+<arg value="com.funambol.framework.core.DevInfData"/>
+<arg value="com.funambol.framework.core.DevInfItem"/>
+<arg value="com.funambol.framework.core.DevTyp"/>
+<arg value="com.funambol.framework.core.DSMem"/>
+<arg value="com.funambol.framework.core.EMI"/>
+<arg value="com.funambol.framework.core.Exec"/>
+<arg value="com.funambol.framework.core.Ext"/>
+<arg value="com.funambol.framework.core.Get"/>
+<arg value="com.funambol.framework.core.HMACAuthentication"/>
+<arg value="com.funambol.framework.core.Item"/>
+<arg value="com.funambol.framework.core.ItemizedCommand"/>
+<arg value="com.funambol.framework.core.Map"/>
+<arg value="com.funambol.framework.core.MapItem"/>
+<arg value="com.funambol.framework.core.Mark"/>
+<arg value="com.funambol.framework.core.Mem"/>
+<arg value="com.funambol.framework.core.Meta"/>
+<arg value="com.funambol.framework.core.MetInf"/>
+<arg value="com.funambol.framework.core.ModificationCommand"/>
+<arg value="com.funambol.framework.core.NextNonce"/>
+<arg value="com.funambol.framework.core.Put"/>
+<arg value="com.funambol.framework.core.Replace"/>
+<arg value="com.funambol.framework.core.ResponseCommand"/>
+<arg value="com.funambol.framework.core.Results"/>
+<arg value="com.funambol.framework.core.Search"/>
+<arg value="com.funambol.framework.core.Sequence"/>
+<arg value="com.funambol.framework.core.SessionID"/>
+<arg value="com.funambol.framework.core.Source"/>
+<arg value="com.funambol.framework.core.SourceRef"/>
+<arg value="com.funambol.framework.core.Status"/>
+<arg value="com.funambol.framework.core.StatusCode"/>
+<arg value="com.funambol.framework.core.Sync"/>
+<arg value="com.funambol.framework.core.SyncBody"/>
+<arg value="com.funambol.framework.core.SyncCap"/>
+<arg value="com.funambol.framework.core.SyncHdr"/>
+<arg value="com.funambol.framework.core.SyncML"/>
+<arg value="com.funambol.framework.core.Target"/>
+<arg value="com.funambol.framework.core.TargetRef"/>
+<arg value="com.funambol.framework.core.VerDTD"/>
+<arg value="com.funambol.framework.core.VerProto"/>
+
+<arg value="com.funambol.framework.core.dm.ddf.DevDetail"/>
+<arg value="com.funambol.framework.core.dm.ddf.DevInfo"/>
+<arg value="com.funambol.framework.core.dm.ddf.MgmtTree"/>
+<arg value="com.funambol.framework.core.dm.ddf.Node"/>
+<arg value="com.funambol.framework.core.dm.ddf.RTProperties"/>
+<!--
+<arg value="com.funambol.framework.core.dm.bootstrap.Auth"/>
+<arg value="com.funambol.framework.core.dm.bootstrap.BasicAccountInfo"/>
+<arg value="com.funambol.framework.core.dm.bootstrap.BootStrap"/>
+<arg value="com.funambol.framework.core.dm.bootstrap.Characteristic"/>
+<arg value="com.funambol.framework.core.dm.bootstrap.Connection"/>
+<arg value="com.funambol.framework.core.dm.bootstrap.ConNode"/>
+<arg value="com.funambol.framework.core.dm.bootstrap.DMAcc"/>
+<arg value="com.funambol.framework.core.dm.bootstrap.DMAccount"/>
+<arg value="com.funambol.framework.core.dm.bootstrap.Ext"/>
+<arg value="com.funambol.framework.core.dm.bootstrap.NAP"/>
+<arg value="com.funambol.framework.core.dm.bootstrap.Parm"/>
+<arg value="com.funambol.framework.core.dm.bootstrap.PX"/>
+<arg value="com.funambol.framework.core.dm.bootstrap.SyncMLDM"/>
+<arg value="com.funambol.framework.core.dm.bootstrap.WapProvisioningDoc"/>
+-->
+
+    </java>
+    
+  </target>
+  
+  <!-- bind as a separate step -->
+  <target name="bind" depends="check-binding">
+    
+    <echo message="Running JiBX binding compiler"/>
+    <taskdef name="bind" classname="org.jibx.binding.ant.CompileTask">
+      <classpath>
+        <fileset dir="${jibx-home}/lib" includes="*.jar"/>
+      </classpath>
+    </taskdef>
+    <bind binding="${basedir}/binding.xml">
+      <classpath refid="classpath"/>
+    </bind>
+    
+  </target>
+  
+  <!-- show list of targets -->
+  <target name="help">
+    <echo message="Targets are:"/>
+    <echo/>
+    <echo message="clean         delete all class files and generated code"/>
+    <echo message="compile       compile class files"/>
+    <echo message="bindgen       generate default binding and schema"/>
+  </target>
+
+</project>

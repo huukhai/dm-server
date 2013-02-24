@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+    http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    version="3.0">
+
+<description>Funambol Data Management Server</description>
+
+<servlet>
+  <servlet-name>SyncServerServlet</servlet-name>
+  <!--
+      ==========================================================================
+
+      Uncomment the following for a multiserver environment.
+
+      NOTES:
+
+      1) If any of the server is hosted on a multihomed machine, set bind_addr
+         to the wanted IP address in channel-properties.
+      2) Set the jndi-address accordingly to your cluster configuration.
+
+      ==========================================================================
+  <servlet-class>com.funambol.transport.http.server.ClusterableSync4jServlet</servlet-class>
+  <init-param>
+    <param-name>channel-properties</param-name>
+    <param-value>UDP(mcast_addr=228.8.8.8;mcast_port=45566;ip_ttl=32;bind_addr=127.0.0.1;mcast_send_buf_size=150000;mcast_recv_buf_size=80000):PING(timeout=2000;num_initial_members=3):MERGE2(min_interval=5000;max_interval=10000):FD_SOCK:VERIFY_SUSPECT(timeout=1500):pbcast.NAKACK(gc_lag=50;retransmit_timeout=300,600,1200,2400,4800):UNICAST(timeout=5000):pbcast.STABLE(desired_avg_gossip=20000):FRAG(frag_size=4096;down_thread=false;up_thread=false):pbcast.GMS(join_timeout=5000;join_retry_timeout=2000;shun=false;print_local_addr=true):pbcast.STATE_TRANSFER</param-value>
+  </init-param>
+  <init-param>
+    <param-name>jndi-address</param-name>
+    <param-value>localhost:1099</param-value>
+  </init-param>
+  <init-param>
+    <param-name>server-uri</param-name>
+    <param-value>{server-name}</param-value>
+  </init-param>
+  -->
+
+  <!--
+      ==========================================================================
+
+      Uncomment the following for a single server environment.
+
+      ==========================================================================
+  -->
+  <servlet-class>com.funambol.transport.http.server.Sync4jServlet</servlet-class>
+  <init-param>
+    <param-name>sync-holder-class</param-name>
+    <param-value>com.funambol.transport.http.server.LocalSyncHolder</param-value>
+  </init-param>
+
+  <!--
+      ==========================================================================
+
+      Common to both single and multi server environments
+  -->
+  <init-param>
+    <param-name>session-time-to-live</param-name>
+    <param-value>600000</param-value>
+  </init-param>
+
+  <load-on-startup>1</load-on-startup>
+</servlet>
+
+<servlet-mapping>
+  <servlet-name>SyncServerServlet</servlet-name>
+  <url-pattern>/dm</url-pattern>
+</servlet-mapping>
+
+<session-config>
+  <!--  session-timeout is measured in minutes. -->
+  <!--  A value of 1 is one minute.             -->
+  <session-timeout>1</session-timeout>
+</session-config>
+
+<resource-ref>
+    <res-ref-name>fnbldm</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+</resource-ref>
+
+</web-app>
