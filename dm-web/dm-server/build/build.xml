@@ -1,0 +1,349 @@
+<?xml version="1.0"?>
+
+<!-- $Id: build.xml,v 1.4 2006/11/15 16:45:10 nichele Exp $
+  =============================================================================
+    Build file for Funambol Device Management Server
+
+    This script should be started with the following command line :
+
+        ant <target>
+
+    Run "ant usage" to get a list of available targets. The default target is
+    "dist"
+  =============================================================================
+-->
+<project name="Funambol DM Server" default="bin" basedir="..">
+
+    <property environment="env"/>
+
+    <property file="${user.home}/funambol-dm-build.properties"/>
+    <property file="build/build.properties" />
+
+    <property name="project-name-text" value="Funambol Device Management Server"/>
+
+    <!-- jar files for shared libraries -->
+    <property name="bcel.jar" value="bcel.jar" />
+    <property name="bsh.jar" value="bsh-2.0b4.jar" />
+    <property name="collections-generic.jar" value="collections-generic-4.01.jar" />
+    <property name="commons-lang.jar" value="commons-lang-2.6.jar" />
+    <property name="joda-time.jar" value="joda-time.jar" />
+    <property name="log4j.jar" value="log4j-1.2.16.jar" />
+    <property name="xpp3.jar" value="xpp3.jar" />
+    <property name="funambol-dm-ext.jar" value="funambol-dm-ext-3.1.0.jar" />
+
+    <!-- jar files for building -->
+
+    <!-- source directory -->
+    <property name="javasrcdir"     value="${basedir}/src/java"/>
+    <property name="xmlsrcdir"      value="${basedir}/src/xml"/>
+    <property name="htmlsrcdir"     value="${basedir}/src/html"/>
+    <property name="beansrcdir"     value="${basedir}/src/bean"/>
+    <property name="sqlsrcdir"      value="${basedir}/src/sql"/>
+    <property name="propertiesdir"  value="${basedir}/src/properties"/>
+
+    <!-- output directories -->
+    <property name="outputdir"    value="${basedir}/output"/>
+    <property name="libdir"       value="${basedir}/lib"/>
+    <property name="pmdlibdir"    value="/c:/tools/pmd-4.2.5/lib"/>
+   
+    <property name="javadocdir"   value="${outputdir}/javadoc"/>
+    <property name="WEB-INFdir" value="${basedir}/output/WEB-INF"/>
+    <property name="classesdir"   value="${WEB-INFdir}/classes"/>
+
+    <!-- MANIFEST files -->
+
+    <!-- produced jar files -->
+    <property name="funambol-framework-jarfilename"       value="funambol-framework.jar" />
+    <property name="funambol-clientframework-jarfilename" value="funambol-clientframework.jar" />
+    <property name="funambol-sqllog-jarfilename"          value="funambol-sqllog.jar" />
+    <property name="funambol-jarfilename"                 value="funambol-server.jar" />
+    <property name="funambol-warfilename"                 value="funambol.war" />
+   
+    <property name="binding-file"    value="${xmlsrcdir}/jibx/binding.xml" />
+    <property name="binding-dm-file" value="${xmlsrcdir}/jibx/binding-dm.xml" />
+
+    <!-- set classpath for compiling and running application with JiBX -->
+    <path id="classpath">
+      <fileset dir="lib" includes="*.jar"/>
+      <pathelement path="${classesdir}"/>
+    </path>
+    
+    <!-- Initialize the build directories -->
+    <target name="init">
+        <mkdir dir="${outputdir}" />
+        <mkdir dir="${javadocdir}" />
+        <mkdir dir="${WEB-INFdir}" />
+        <mkdir dir="${WEB-INFdir}/lib" />
+        <mkdir dir="${classesdir}" />
+    </target>
+
+    <!-- Compiling -->
+    <target name="build" depends="init">
+        <javac deprecation="true"
+               srcdir="${javasrcdir}"
+               destdir="${classesdir}"
+               includeantruntime="true"
+               fork="yes"
+               executable="${env.JAVA_HOME}/bin/javac"
+               includes="com/funambol/framework/core/*.java,
+                         com/funambol/framework/core/**/*.java,
+                         com/funambol/framework/tools/Base64.java
+                         ">
+            <classpath>
+                <fileset dir="lib">
+                  <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+<!--            <compilerarg value="-Xlint:unchecked" /> -->
+        </javac>
+        <javac debug="on" deprecation="true"
+            srcdir="${javasrcdir}" destdir="${classesdir}"
+            includeantruntime="true"
+            includes="com/funambol/transport/**/*.java,
+                      com/funambol/server/**/*.java,
+                      com/funambol/test/**/*.java,
+                      com/funambol/framework/**/*.java
+                      "
+            excludes="com/funambol/framework/core/*,
+                      com/funambol/framework/core/**/*,
+                      com/funambol/framework/tools/Base64.java
+                      ">
+            <classpath>
+                <pathelement location="${env.ANT_HOME}/lib/ant.jar"/>
+                <fileset dir="lib">
+                  <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+<!--            <compilerarg value="-Xlint:uncheked" /> -->
+        </javac>
+
+    </target>
+
+  <!-- Run the JiBX binding. -->
+  <target name="run-bind">
+    <taskdef name="bind" classname="org.jibx.binding.ant.CompileTask">
+        <classpath refid="classpath"/>
+    </taskdef>
+    <bind verbose="false" binding="${binding-file}">
+        <classpath refid="classpath"/>
+    </bind>
+    <bind verbose="false" binding="${binding-dm-file}">
+        <classpath refid="classpath"/>
+    </bind>
+  </target>
+
+
+    <!-- jarring framework library files -->
+    <target name="${funambol-framework-jarfilename}" depends="init, build, run-bind">
+      <delete file="${outputdir}/${funambol-framework-jarfilename}"/>
+      <jar   jarfile="${outputdir}/${funambol-framework-jarfilename}"
+             basedir="${classesdir}"
+             compress="true"
+             includes="com/funambol/framework/**">
+      </jar>
+    </target>
+
+    <!-- jarring client framework library files -->
+    <target name="${funambol-clientframework-jarfilename}" depends="init, build">
+        <delete file="${outputdir}/${funambol-clientframework-jarfilename}"/>
+        <jar   jarfile="${outputdir}/${funambol-clientframework-jarfilename}"
+            basedir="${classesdir}"
+            compress="true"
+            includes="com/funambol/framework/core/**,
+                      com/funambol/framework/tools/Base64.class,
+                      com/funambol/test/**
+                      ">
+      </jar>
+    </target>
+
+    <!-- jarring P6Spy sql logging stuffs -->
+    <target name="${funambol-sqllog-jarfilename}" depends="init">
+        <delete file="${outputdir}/${funambol-sqllog-jarfilename}"/>
+        <jar jarfile="${outputdir}/${funambol-sqllog-jarfilename}" compress="true">
+            <fileset dir="${classesdir}">
+                <include name="com/funambol/framework/logging/P6SpyLogger.class"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <!-- creating enterprise java bean -->
+    <target name="${funambol-jarfilename}" depends="init, build">
+        <delete file="${outputdir}/${funambol-jarfilename}"/>
+        <jar jarfile="${outputdir}/${funambol-jarfilename}">
+            <fileset dir="${classesdir}">
+                <include name="com/funambol/server/**/*.class"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <!-- jarring web archive file -->
+    <target name="${funambol-warfilename}" depends="init, build, ${funambol-framework-jarfilename}">
+        <delete file="${outputdir}/${funambol-warfilename}"/>
+        <war warfile="${outputdir}/${funambol-warfilename}"
+            webxml="${xmlsrcdir}/webapp/web.xml" >
+            <lib dir="${libdir}" >
+                <include name="${bcel.jar}" />
+                <include name="${bsh.jar}" />
+                <include name="${collections-generic.jar}" />
+                <include name="${commons-lang.jar}" />
+                <include name="${joda-time.jar}" />
+                <include name="${xpp3.jar}" />
+                <include name="${funambol-dm-ext.jar}" />
+            </lib>
+            <lib dir="${outputdir}" >
+                <include name="${funambol-framework-jarfilename}"/>
+                <include name="${funambol-jarfilename}"/>
+            </lib>
+            <classes dir="${classesdir}">
+                <include name="com/funambol/transport/http/server/*.class" />
+            </classes>
+        </war>
+    </target>
+
+    <!-- =============================================== -->
+    <!-- Create JavaDoc for all classes                  -->
+    <!-- =============================================== -->
+    <target name="funambol-javadocs" depends="init">
+        <mkdir dir="${javadocdir}" />
+        <javadoc
+            sourcepath="${javasrcdir}"
+            packagenames="com.funambol.*"
+            destdir="${javadocdir}/all"
+            author="true"
+            version="true"
+            use="true"
+            package="true"
+            windowtitle="Funambol Device Management Server API">
+            <classpath>
+                <pathelement location="${env.ANT_HOME}/lib/ant.jar"/>
+                <fileset dir="lib">
+                    <include name="**/*.jar"/>
+                </fileset>
+          </classpath>
+        </javadoc>
+    </target>
+
+    <!-- =============================================== -->
+    <!-- Create JavaDoc for the framework classes        -->
+    <!-- =============================================== -->
+    <target name="framework-javadocs" depends="init">
+        <mkdir dir="${javadocdir}/framework" />
+        <javadoc
+            sourcepath="${javasrcdir}"
+            packagenames="com.funambol.framework.core,
+                          com.funambol.framework.engine.*,
+                          com.funambol.framework.logging,
+                          com.funambol.framework.security.*,
+                          com.funambol.framework.server.error,
+                          com.funambol.framework.store,
+                          com.funambol.framework.tools"
+            destdir="${javadocdir}/framework"
+            author="true"
+            version="true"
+            use="true"
+            package="true"
+            windowtitle="Funambol Device Management Server Framework API">
+            <classpath>
+                <pathelement location="${env.ANT_HOME}/lib/ant.jar"/>
+                <fileset dir="lib">
+                   <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        
+        </javadoc>
+    </target>
+
+
+    <!-- =============================================== -->
+    <!-- DOCS                                            -->
+    <!-- =============================================== -->
+    <target name="docs" depends="init, framework-javadocs, funambol-javadocs"/>
+
+    <!-- =============================================== -->
+    <!-- BIN, WAR, LIB                             -->
+    <!-- =============================================== -->
+
+    <target name="bin" depends="init,
+                                ${funambol-framework-jarfilename},
+                                ${funambol-jarfilename},
+                                ${funambol-clientframework-jarfilename},
+                                ${funambol-sqllog-jarfilename},
+                                ${funambol-warfilename}" >
+    </target>
+
+    <!-- =============================================== -->
+    <!-- QA                                              -->
+    <!-- In order to run this task, make sure you have   -->
+    <!-- in your lib directory (or subdirectory) the PMD -->
+    <!-- jar files. Download PMD from here:              -->
+    <!-- http://pmd.sourceforge.net                      -->
+    <!-- =============================================== -->
+    <target name="qa" depends="init">
+        <taskdef name      = "pmd"
+                 classname = "net.sourceforge.pmd.ant.PMDTask"
+        >
+            <classpath>
+                <fileset dir="${pmdlibdir}">
+                  <include name="pmd-4.2.5.jar"/>
+                </fileset>
+            </classpath>
+        </taskdef>
+
+        <pmd rulesetfiles="rulesets/basic.xml,rulesets/design.xml,rulesets/imports.xml,rulesets/strings.xml,rulesets/braces.xml,rulesets/codesize.xml,rulesets/unusedcode.xml,rulesets/strictexception.xml">
+            <formatter type="html" toFile="${outputdir}/pmd_report.html"/>
+            <fileset dir="${javasrcdir}">
+                <exclude name="org/**/*.*"/>
+                <exclude name="nanoxml/**/*.*"/>
+                <exclude name="com/funambol/client/**/*.*"/>
+                <exclude name="com/funambol/framework/client/**/*.*"/>
+                <exclude name="com/funambol/transport/**/*.*"/>
+
+                <include name="**/*.java"/>
+            </fileset>
+        </pmd>
+    </target>
+
+    <!-- =============================================== -->
+    <!-- CLEAN                                           -->
+    <!-- =============================================== -->
+    <target name="clean" depends="init">
+        <delete dir="${javadocdir}" />
+        <delete dir="${classesdir}" />
+        <delete dir="${outputdir}" />
+    </target>
+
+    <!-- =============================================== -->
+    <!-- ENV                                             -->
+    <!-- =============================================== -->
+    <target name="env" depends="init">
+      <echoproperties/>
+    </target>
+
+    <!--
+       ========================================================================
+         Help on usage. List available targets
+       ========================================================================
+    -->
+    <target name="usage" depends="init">
+
+        <echo message=""/>
+        <echo message="${project-name-text} build file"/>
+        <echo message="------------------------------------------------------"/>
+        <echo message=""/>
+        <echo message=" Available targets are :"/>
+        <echo message=""/>
+        <echo message=" usage       --> help on usage"/>
+        <echo message=" build       --> builds the project"/>
+        <echo message=" createdb    --> creates the database schema"/>
+        <echo message=" bin         --> generates binary files (default)"/>
+        <echo message=" test        --> tests the dist file"/>
+        <echo message=" clean       --> cleans up the build directory"/>
+        <echo message=" docs        --> generates the docs (javadoc, ...)"/>
+        <echo message=" deploy      --> deploys the binary ear into the J2EE reference implementation"/>
+        <echo message=" env         --> Displays the current environment"/>
+        <echo message=" make-dist   --> Create the distribution installation file"/>
+        <echo message=" all         --> do it all at once (clean, dist, doc)"/>
+        <echo message=""/>
+
+    </target>
+</project>

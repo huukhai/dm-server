@@ -1,0 +1,4 @@
+<binding name="binding" package="com.funambol.framework.core">
+  <include path="framework_coreBinding.xml"/>
+  <include path="framework_core_dm_ddfBinding.xml"/>
+</binding>

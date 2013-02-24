@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+
+<!--
+ * Funambol is a mobile platform developed by Funambol, Inc.
+ * Copyright (C) 2011 Funambol, Inc.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License version 3 as published by
+ * the Free Software Foundation with the addition of the following permission
+ * added to Section 15 as permitted in Section 7(a): FOR ANY PART OF THE COVERED
+ * WORK IN WHICH THE COPYRIGHT IS OWNED BY FUNAMBOL, FUNAMBOL DISCLAIMS THE
+ * WARRANTY OF NON INFRINGEMENT  OF THIRD PARTY RIGHTS.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, see http://www.gnu.org/licenses or write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301 USA.
+ *
+ * You can contact Funambol, Inc. headquarters at 643 Bair Island Road, Suite
+ * 305, Redwood City, CA 94063, USA, or at email address info@funambol.com.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU Affero General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU Affero General Public License
+ * version 3, these Appropriate Legal Notices must retain the display of the
+ * "Powered by Funambol" logo. If the display of the logo is not reasonably
+ * feasible for technical reasons, the Appropriate Legal Notices must display
+ * the words "Powered by Funambol".
+-->
+
+<!--
+  =============================================================================
+    Deployment tasks for Tomcat 6
+
+    $Id: jboss32.xml,v 1.5 2007-06-19 08:16:10 luigiafassina Exp $
+
+  =============================================================================
+-->
+<project name="Funambol DM Server Setup on Tomcat 7" default="as-deploy" basedir="..">
+
+    <!-- =================================================================== -->
+    <!-- Properties setting                                                  -->
+    <!-- =================================================================== -->
+
+    <!-- =================================================================== -->
+    <!-- as-deploy - deploying the enterprise archive                        -->
+    <!-- =================================================================== -->
+    <target name="as-deploy" depends="init">
+        <copy file="output/tmp2/${funambol-warfilename}" todir="${ENV.J2EE_HOME}/webapps" overwrite="true"/>
+        <copy file="output/${dmdemo-warfilename}" todir="${ENV.J2EE_HOME}/webapps" overwrite="true"/>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- as-init - initialize the project for Tomcat                          -->
+    <!-- =================================================================== -->
+    <target name="as-init">
+      <echo message="Funambol Device Management Server will be installed on the Tomcat 7 application server"/>
+      <mkdir dir="output/tmp1"/>
+      <mkdir dir="output/tmp2"/>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- as-inst - Tomcat specific installation tasks                         -->
+    <!-- =================================================================== -->
+    <target name="as-inst" depends="init" unless="do.install-modules-only">
+        <!-- Tomcat specifc replacements -->
+        <!-- context.xml -->
+        <replace file="output/config/tomcat/context.xml"
+                 propertyFile="install.properties"
+                 summary="true">
+            <replacefilter token="{jdbc-driver}"   property="jdbc.driver"  />
+            <replacefilter token="{jdbc-url}"      property="jdbc.url"     />
+            <replacefilter token="{jdbc-user}"     property="jdbc.user"    />
+            <replacefilter token="{jdbc-password}" property="jdbc.password"/>
+        </replace>
+        <copy todir="${ENV.J2EE_HOME}/conf" overwrite="true">
+            <fileset file="output/config/tomcat/context.xml"/>
+        </copy>
+
+        <!-- expand funambol.war -->
+        <unjar src="output/${funambol-warfilename}" dest="output/tmp1/${funambol.war.dir}"/>
+
+        <!-- web.xml -->
+        <replace file="output/tmp1/${funambol.war.dir}/WEB-INF/web.xml"
+                 propertyFile="install.properties"
+                 summary="true">
+            <replacefilter token="{server-name}" value="server-name"  />
+        </replace>
+
+        <!-- funambol-context.xml -->
+        <replace file="output/config/tomcat/funambol-context.xml"
+                 propertyFile="install.properties"
+                 summary="true">
+            <replacefilter token="{context-path}"   property="context-path"  />
+        </replace>
+        <copy tofile="output/tmp1/${funambol.war.dir}/META-INF/context.xml" file="output/config/tomcat/funambol-context.xml" overwrite="true"/>
+
+        <!-- libraralies -->
+        <copy todir="${ENV.J2EE_HOME}/lib" file="lib/${log4j.jar}" overwrite="true"/>
+        <copy todir="${ENV.J2EE_HOME}/lib" file="output/config/log4j/log4j.properties" overwrite="true"/>
+
+        <!-- funambol.war -->
+        <copy todir="output/tmp1/${funambol.war.dir}/WEB-INF/lib" file="output/dmdemo-common.jar" overwrite="true"/>
+
+        <!-- dmdemo.war -->
+
+        <!-- repack -->
+        <jar destfile="output/tmp2/${funambol-warfilename}" basedir="output/tmp1/${funambol.war.dir}"/>
+
+        <!-- start.cmd -->
+        <copy tofile="bin/start.cmd" file="bin/funambol-tomcat.cmd" overwrite="true"/>
+        <copy tofile="bin/start.sh" file="bin/funambol-tomcat.sh" overwrite="true"/>
+
+    </target>
+
+</project>

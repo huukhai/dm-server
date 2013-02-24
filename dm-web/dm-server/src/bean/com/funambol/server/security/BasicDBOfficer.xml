@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.4.0" class="java.beans.XMLDecoder">
+ <object class="com.funambol.framework.security.DBOfficer">
+  <void property="guestEnabled">
+   <boolean>false</boolean>
+  </void>
+
+    <!--
+        authType can be one between:
+          syncml:auth-basic
+          syncml:auth-md5
+          syncml:auth-MAC
+      -->
+
+   <void property="authType">
+     <string>syncml:auth-basic</string>
+   </void>
+
+   <void property="supportedAuthType">
+     <string>syncml:auth-basic</string>
+   </void>
+
+
+ </object>
+</java>
