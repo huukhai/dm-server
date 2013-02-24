@@ -1,0 +1,530 @@
+<binding xmlns:ns2="http://funambol.com/framework/core" xmlns:ns1="http://funambol.com/framework/core/dm/ddf">
+  <namespace uri="http://funambol.com/framework/core" default="elements"/>
+  <mapping abstract="true" type-name="ns2:abstractCommand" class="com.funambol.framework.core.AbstractCommand">
+    <structure map-as="ns2:cmdID" field="cmdID" usage="optional" name="cmdID"/>
+    <value style="attribute" name="noResp" field="noResp" usage="optional"/>
+    <structure map-as="ns2:meta" field="meta" usage="optional" name="meta"/>
+    <structure map-as="ns2:cred" field="credential" usage="optional" name="credential"/>
+  </mapping>
+  <mapping abstract="true" class="com.funambol.framework.core.AbstractCommand" name="abstractCommand">
+    <structure map-as="ns2:abstractCommand"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:itemizedCommand" class="com.funambol.framework.core.ItemizedCommand">
+    <structure map-as="ns2:abstractCommand"/>
+    <collection item-type="com.funambol.framework.core.Item" field="items" usage="optional"/>
+    <structure map-as="ns2:meta" field="meta" usage="optional" name="meta"/>
+  </mapping>
+  <mapping abstract="true" extends="com.funambol.framework.core.AbstractCommand" class="com.funambol.framework.core.ItemizedCommand" name="itemizedCommand">
+    <structure map-as="ns2:itemizedCommand"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:modificationCommand" class="com.funambol.framework.core.ModificationCommand">
+    <structure map-as="ns2:itemizedCommand"/>
+  </mapping>
+  <mapping abstract="true" extends="com.funambol.framework.core.ItemizedCommand" class="com.funambol.framework.core.ModificationCommand" name="modificationCommand">
+    <structure map-as="ns2:modificationCommand"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:add" class="com.funambol.framework.core.Add">
+    <structure map-as="ns2:modificationCommand"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.ModificationCommand" class="com.funambol.framework.core.Add" name="add">
+    <structure map-as="ns2:add"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:alert" class="com.funambol.framework.core.Alert">
+    <structure map-as="ns2:itemizedCommand"/>
+    <value style="attribute" name="data" field="data"/>
+    <value style="element" name="correlator" field="correlator" usage="optional"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.ItemizedCommand" class="com.funambol.framework.core.Alert" name="alert">
+    <structure map-as="ns2:alert"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:anchor" class="com.funambol.framework.core.Anchor">
+    <value style="element" name="last" field="last" usage="optional"/>
+    <value style="element" name="next" field="next" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.Anchor" name="anchor">
+    <structure map-as="ns2:anchor"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:atomic" class="com.funambol.framework.core.Atomic">
+    <structure map-as="ns2:abstractCommand"/>
+    <collection item-type="com.funambol.framework.core.AbstractCommand" field="commands" usage="optional"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.AbstractCommand" class="com.funambol.framework.core.Atomic" name="atomic">
+    <structure map-as="ns2:atomic"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:authentication" class="com.funambol.framework.core.Authentication">
+    <value style="element" name="data" field="data" usage="optional"/>
+    <value style="element" name="username" field="username" usage="optional"/>
+    <value style="element" name="password" field="password" usage="optional"/>
+    <value style="attribute" name="encode" field="encode"/>
+    <value style="element" name="deviceId" field="deviceId" usage="optional"/>
+    <value style="element" name="syncMLVerProto" field="syncMLVerProto" usage="optional"/>
+    <structure map-as="ns2:meta" field="meta" usage="optional" name="meta"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.Authentication" name="authentication">
+    <structure map-as="ns2:authentication"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:chal" class="com.funambol.framework.core.Chal">
+    <structure map-as="ns2:meta" field="meta" usage="optional" name="meta"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.Chal" name="chal">
+    <structure map-as="ns2:chal"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:cmdID" class="com.funambol.framework.core.CmdID">
+    <value style="element" name="cmdID" field="cmdID" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.CmdID" name="cmdID">
+    <structure map-as="ns2:cmdID"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:data" class="com.funambol.framework.core.Data">
+    <value style="element" name="data" field="data" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.Data" name="data">
+    <structure map-as="ns2:data"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:complexData" class="com.funambol.framework.core.ComplexData">
+    <structure map-as="ns2:data"/>
+    <structure map-as="ns2:anchor" field="anchor" usage="optional" name="anchor"/>
+    <structure map-as="ns2:devInf" field="devInf" usage="optional" name="devInf"/>
+    <structure map-as="ns1:mgmtTree" field="mgmtTree" usage="optional" name="mgmtTree"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.Data" class="com.funambol.framework.core.ComplexData" name="complexData">
+    <structure map-as="ns2:complexData"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:contentTypeInfo" class="com.funambol.framework.core.ContentTypeInfo">
+    <value style="element" name="ctType" field="ctType" usage="optional"/>
+    <value style="element" name="verCT" field="verCT" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.ContentTypeInfo" name="contentTypeInfo">
+    <structure map-as="ns2:contentTypeInfo"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:contentTypeParameter" class="com.funambol.framework.core.ContentTypeParameter">
+    <value style="element" name="paramName" field="paramName" usage="optional"/>
+    <collection field="valEnum" usage="optional">
+      <value name="string" type="java.lang.String"/>
+    </collection>
+    <value style="element" name="displayName" field="displayName" usage="optional"/>
+    <value style="element" name="dataType" field="dataType" usage="optional"/>
+    <value style="attribute" name="size" field="size"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.ContentTypeParameter" name="contentTypeParameter">
+    <structure map-as="ns2:contentTypeParameter"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:copy" class="com.funambol.framework.core.Copy">
+    <structure map-as="ns2:modificationCommand"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.ModificationCommand" class="com.funambol.framework.core.Copy" name="copy">
+    <structure map-as="ns2:copy"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:cred" class="com.funambol.framework.core.Cred">
+    <structure map-as="com.funambol.framework.core.Authentication" field="authentication" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.Cred" name="cred">
+    <structure map-as="ns2:cred"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:CTCap" class="com.funambol.framework.core.CTCap">
+    <collection field="ctTypeSupported" usage="optional">
+      <structure map-as="ns2:CTTypeSupported" name="CTTypeSupported"/>
+    </collection>
+  </mapping>
+  <mapping class="com.funambol.framework.core.CTCap" name="CTCap">
+    <structure map-as="ns2:CTCap"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:CTPropParam" class="com.funambol.framework.core.CTPropParam">
+    <value style="element" name="propName" field="propName" usage="optional"/>
+    <collection field="valEnum" usage="optional">
+      <value name="string" type="java.lang.String"/>
+    </collection>
+    <value style="element" name="displayName" field="displayName" usage="optional"/>
+    <value style="element" name="dataType" field="dataType" usage="optional"/>
+    <value style="attribute" name="size" field="size"/>
+    <collection field="ctParameters" usage="optional">
+      <structure map-as="ns2:contentTypeParameter" name="ctParameter"/>
+    </collection>
+  </mapping>
+  <mapping class="com.funambol.framework.core.CTPropParam" name="CTPropParam">
+    <structure map-as="ns2:CTPropParam"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:CTType" class="com.funambol.framework.core.CTType">
+    <value style="element" name="ctType" field="ctType" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.CTType" name="CTType">
+    <structure map-as="ns2:CTType"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:CTTypeSupported" class="com.funambol.framework.core.CTTypeSupported">
+    <structure map-as="ns2:CTType" field="ctType" usage="optional" name="ctType"/>
+    <collection field="ctPropParams" usage="optional">
+      <structure map-as="ns2:CTPropParam" name="ctPropParam"/>
+    </collection>
+  </mapping>
+  <mapping class="com.funambol.framework.core.CTTypeSupported" name="CTTypeSupported">
+    <structure map-as="ns2:CTTypeSupported"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:dataStore" class="com.funambol.framework.core.DataStore">
+    <structure map-as="ns2:sourceRef" field="sourceRef" usage="optional" name="sourceRef"/>
+    <value style="element" name="displayName" field="displayName" usage="optional"/>
+    <value style="attribute" name="maxGUIDSize" field="maxGUIDSize"/>
+    <structure map-as="ns2:contentTypeInfo" field="rxPref" usage="optional" name="rxPref"/>
+    <collection field="rx" usage="optional">
+      <structure map-as="ns2:contentTypeInfo" name="contentTypeInfo"/>
+    </collection>
+    <structure map-as="ns2:contentTypeInfo" field="txPref" usage="optional" name="txPref"/>
+    <collection field="tx" usage="optional">
+      <structure map-as="ns2:contentTypeInfo" name="contentTypeInfo"/>
+    </collection>
+    <structure map-as="ns2:DSMem" field="dsMem" usage="optional" name="dsMem"/>
+    <structure map-as="ns2:syncCap" field="syncCap" usage="optional" name="syncCap"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.DataStore" name="dataStore">
+    <structure map-as="ns2:dataStore"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:delete" class="com.funambol.framework.core.Delete">
+    <structure map-as="ns2:modificationCommand"/>
+    <value style="attribute" name="archive" field="archive" usage="optional"/>
+    <value style="attribute" name="sftDel" field="sftDel" usage="optional"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.ModificationCommand" class="com.funambol.framework.core.Delete" name="delete">
+    <structure map-as="ns2:delete"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:devInf" class="com.funambol.framework.core.DevInf">
+    <structure map-as="ns2:verDTD" field="verDTD" usage="optional" name="verDTD"/>
+    <value style="element" name="man" field="man" usage="optional"/>
+    <value style="element" name="mod" field="mod" usage="optional"/>
+    <value style="element" name="oem" field="oem" usage="optional"/>
+    <value style="element" name="fwV" field="fwV" usage="optional"/>
+    <value style="element" name="swV" field="swV" usage="optional"/>
+    <value style="element" name="hwV" field="hwV" usage="optional"/>
+    <value style="element" name="devID" field="devID" usage="optional"/>
+    <value style="element" name="devTyp" field="devTyp" usage="optional"/>
+    <collection field="datastores" usage="optional">
+      <structure map-as="ns2:dataStore" name="datastore"/>
+    </collection>
+    <collection field="ctCap" usage="optional">
+      <structure map-as="ns2:CTCap" name="CTCap"/>
+    </collection>
+    <collection field="ext" usage="optional">
+      <structure map-as="ns2:ext" name="ext"/>
+    </collection>
+    <value style="attribute" name="utc" field="utc" usage="optional"/>
+    <value style="attribute" name="supportLargeObjs" field="supportLargeObjs" usage="optional"/>
+    <value style="attribute" name="supportNumberOfChanges" field="supportNumberOfChanges" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.DevInf" name="devInf">
+    <structure map-as="ns2:devInf"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:devInfData" class="com.funambol.framework.core.DevInfData">
+    <structure map-as="ns2:data"/>
+    <structure map-as="ns2:devInf" field="devInf" usage="optional" name="devInf"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.Data" class="com.funambol.framework.core.DevInfData" name="devInfData">
+    <structure map-as="ns2:devInfData"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:item" class="com.funambol.framework.core.Item">
+    <structure map-as="ns2:target" field="target" usage="optional" name="target"/>
+    <structure map-as="ns2:source" field="source" usage="optional" name="source"/>
+    <structure map-as="ns2:meta" field="meta" usage="optional" name="meta"/>
+    <structure map-as="ns2:complexData" field="data" usage="optional" name="data"/>
+    <value style="attribute" name="moreData" field="moreData" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.Item" name="item">
+    <structure map-as="ns2:item"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:devInfItem" class="com.funambol.framework.core.DevInfItem">
+    <structure map-as="ns2:item"/>
+    <structure map-as="ns2:target" field="target" usage="optional" name="target"/>
+    <structure map-as="ns2:source" field="source" usage="optional" name="source"/>
+    <structure map-as="ns2:meta" field="meta" usage="optional" name="meta"/>
+    <structure map-as="ns2:devInfData" field="data" usage="optional" name="data"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.Item" class="com.funambol.framework.core.DevInfItem" name="devInfItem">
+    <structure map-as="ns2:devInfItem"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:devTyp" class="com.funambol.framework.core.DevTyp"/>
+  <mapping class="com.funambol.framework.core.DevTyp" name="devTyp">
+    <structure map-as="ns2:devTyp"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:DSMem" class="com.funambol.framework.core.DSMem">
+    <value style="attribute" name="sharedMem" field="sharedMem" usage="optional"/>
+    <value style="attribute" name="maxMem" field="maxMem"/>
+    <value style="attribute" name="maxID" field="maxID"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.DSMem" name="DSMem">
+    <structure map-as="ns2:DSMem"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:EMI" class="com.funambol.framework.core.EMI">
+    <value style="element" name="value" field="value" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.EMI" name="EMI">
+    <structure map-as="ns2:EMI"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:exec" class="com.funambol.framework.core.Exec">
+    <structure map-as="ns2:modificationCommand"/>
+    <value style="element" name="correlator" field="correlator" usage="optional"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.ModificationCommand" class="com.funambol.framework.core.Exec" name="exec">
+    <structure map-as="ns2:exec"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:ext" class="com.funambol.framework.core.Ext">
+    <value style="element" name="xNam" field="xNam" usage="optional"/>
+    <collection field="xVal" usage="optional">
+      <value name="string" type="java.lang.String"/>
+    </collection>
+  </mapping>
+  <mapping class="com.funambol.framework.core.Ext" name="ext">
+    <structure map-as="ns2:ext"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:get" class="com.funambol.framework.core.Get">
+    <structure map-as="ns2:itemizedCommand"/>
+    <value style="element" name="lang" field="lang" usage="optional"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.ItemizedCommand" class="com.funambol.framework.core.Get" name="get">
+    <structure map-as="ns2:get"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:HMACAuthentication" class="com.funambol.framework.core.HMACAuthentication">
+    <structure map-as="ns2:authentication"/>
+    <value style="element" name="userMac" field="userMac" usage="optional"/>
+    <value style="element" name="algorithm" field="algorithm" usage="optional"/>
+    <value style="element" name="calculatedMac" field="calculatedMac" usage="optional"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.Authentication" class="com.funambol.framework.core.HMACAuthentication" name="HMACAuthentication">
+    <structure map-as="ns2:HMACAuthentication"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:map" class="com.funambol.framework.core.Map">
+    <structure map-as="ns2:abstractCommand"/>
+    <structure map-as="ns2:target" field="target" usage="optional" name="target"/>
+    <structure map-as="ns2:source" field="source" usage="optional" name="source"/>
+    <collection field="mapItems" usage="optional">
+      <structure map-as="ns2:mapItem" name="mapItem"/>
+    </collection>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.AbstractCommand" class="com.funambol.framework.core.Map" name="map">
+    <structure map-as="ns2:map"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:mapItem" class="com.funambol.framework.core.MapItem">
+    <structure map-as="ns2:target" field="target" usage="optional" name="target"/>
+    <structure map-as="ns2:source" field="source" usage="optional" name="source"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.MapItem" name="mapItem">
+    <structure map-as="ns2:mapItem"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:mark" class="com.funambol.framework.core.Mark"/>
+  <mapping abstract="true" class="com.funambol.framework.core.Mark" name="mark">
+    <structure map-as="ns2:mark"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:mem" class="com.funambol.framework.core.Mem">
+    <value style="attribute" name="sharedMem" field="sharedMem" usage="optional"/>
+    <value style="attribute" name="freeMem" field="freeMem"/>
+    <value style="attribute" name="freeID" field="freeID"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.Mem" name="mem">
+    <structure map-as="ns2:mem"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:meta" class="com.funambol.framework.core.Meta">
+    <value style="element" name="format" field="format" usage="optional"/>
+    <value style="element" name="type" field="type" usage="optional"/>
+    <value style="element" name="mark" field="mark" usage="optional"/>
+    <structure map-as="ns2:anchor" field="anchor" usage="optional" name="anchor"/>
+    <value style="element" name="version" field="version" usage="optional"/>
+    <structure map-as="ns2:nextNonce" field="nextNonce" usage="optional" name="nextNonce"/>
+    <value style="attribute" name="maxMsgSize" field="maxMsgSize" usage="optional"/>
+    <value style="attribute" name="maxObjSize" field="maxObjSize" usage="optional"/>
+    <value style="attribute" name="size" field="size" usage="optional"/>
+    <collection field="emi" usage="optional">
+      <structure map-as="ns2:EMI" name="EMI"/>
+    </collection>
+    <structure map-as="ns2:mem" field="mem" usage="optional" name="mem"/>
+    <structure map-as="ns2:metInf" field="metInf" usage="optional" name="metInf"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.Meta" name="meta">
+    <structure map-as="ns2:meta"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:metInf" class="com.funambol.framework.core.MetInf">
+    <value style="element" name="format" field="format" usage="optional"/>
+    <value style="element" name="type" field="type" usage="optional"/>
+    <value style="element" name="mark" field="mark" usage="optional"/>
+    <structure map-as="ns2:anchor" field="anchor" usage="optional" name="anchor"/>
+    <value style="element" name="version" field="version" usage="optional"/>
+    <structure map-as="ns2:nextNonce" field="nextNonce" usage="optional" name="nextNonce"/>
+    <value style="attribute" name="maxMsgSize" field="maxMsgSize" usage="optional"/>
+    <value style="attribute" name="maxObjSize" field="maxObjSize" usage="optional"/>
+    <value style="attribute" name="size" field="size" usage="optional"/>
+    <collection field="emi" usage="optional">
+      <structure map-as="ns2:EMI" name="EMI"/>
+    </collection>
+    <structure map-as="ns2:mem" field="mem" usage="optional" name="mem"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.MetInf" name="metInf">
+    <structure map-as="ns2:metInf"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:nextNonce" class="com.funambol.framework.core.NextNonce">
+    <collection field="value" usage="optional">
+      <value name="byte" type="byte"/>
+    </collection>
+  </mapping>
+  <mapping class="com.funambol.framework.core.NextNonce" name="nextNonce">
+    <structure map-as="ns2:nextNonce"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:put" class="com.funambol.framework.core.Put">
+    <structure map-as="ns2:itemizedCommand"/>
+    <value style="element" name="lang" field="lang" usage="optional"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.ItemizedCommand" class="com.funambol.framework.core.Put" name="put">
+    <structure map-as="ns2:put"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:replace" class="com.funambol.framework.core.Replace">
+    <structure map-as="ns2:modificationCommand"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.ModificationCommand" class="com.funambol.framework.core.Replace" name="replace">
+    <structure map-as="ns2:replace"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:responseCommand" class="com.funambol.framework.core.ResponseCommand">
+    <structure map-as="ns2:itemizedCommand"/>
+    <value style="element" name="msgRef" field="msgRef" usage="optional"/>
+    <value style="element" name="cmdRef" field="cmdRef" usage="optional"/>
+    <collection field="targetRef" usage="optional">
+      <structure map-as="ns2:targetRef" name="targetRef"/>
+    </collection>
+    <collection field="sourceRef" usage="optional">
+      <structure map-as="ns2:sourceRef" name="sourceRef"/>
+    </collection>
+  </mapping>
+  <mapping abstract="true" extends="com.funambol.framework.core.ItemizedCommand" class="com.funambol.framework.core.ResponseCommand" name="responseCommand">
+    <structure map-as="ns2:responseCommand"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:results" class="com.funambol.framework.core.Results">
+    <structure map-as="ns2:responseCommand"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.ResponseCommand" class="com.funambol.framework.core.Results" name="results">
+    <structure map-as="ns2:results"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:search" class="com.funambol.framework.core.Search">
+    <structure map-as="ns2:abstractCommand"/>
+    <value style="attribute" name="noResults" field="noResults" usage="optional"/>
+    <structure map-as="ns2:target" field="target" usage="optional" name="target"/>
+    <collection field="sources" usage="optional">
+      <structure map-as="ns2:source" name="source"/>
+    </collection>
+    <value style="element" name="lang" field="lang" usage="optional"/>
+    <structure map-as="com.funambol.framework.core.Data" field="data" usage="optional"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.AbstractCommand" class="com.funambol.framework.core.Search" name="search">
+    <structure map-as="ns2:search"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:sequence" class="com.funambol.framework.core.Sequence">
+    <structure map-as="ns2:abstractCommand"/>
+    <collection item-type="com.funambol.framework.core.AbstractCommand" field="commands" usage="optional"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.AbstractCommand" class="com.funambol.framework.core.Sequence" name="sequence">
+    <structure map-as="ns2:sequence"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:sessionID" class="com.funambol.framework.core.SessionID">
+    <value style="element" name="sessionID" field="sessionID" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.SessionID" name="sessionID">
+    <structure map-as="ns2:sessionID"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:source" class="com.funambol.framework.core.Source">
+    <value style="element" name="locURI" field="locURI" usage="optional"/>
+    <value style="element" name="locName" field="locName" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.Source" name="source">
+    <structure map-as="ns2:source"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:sourceRef" class="com.funambol.framework.core.SourceRef">
+    <value style="element" name="value" field="value" usage="optional"/>
+    <structure map-as="ns2:source" field="source" usage="optional" name="source"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.SourceRef" name="sourceRef">
+    <structure map-as="ns2:sourceRef"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:status" class="com.funambol.framework.core.Status">
+    <structure map-as="ns2:responseCommand"/>
+    <structure map-as="ns2:chal" field="chal" usage="optional" name="chal"/>
+    <structure map-as="com.funambol.framework.core.Data" field="data" usage="optional"/>
+    <value style="element" name="cmd" field="cmd" usage="optional"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.ResponseCommand" class="com.funambol.framework.core.Status" name="status">
+    <structure map-as="ns2:status"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:statusCode" class="com.funambol.framework.core.StatusCode"/>
+  <mapping class="com.funambol.framework.core.StatusCode" name="statusCode">
+    <structure map-as="ns2:statusCode"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:sync" class="com.funambol.framework.core.Sync">
+    <structure map-as="ns2:abstractCommand"/>
+    <structure map-as="ns2:target" field="target" usage="optional" name="target"/>
+    <structure map-as="ns2:source" field="source" usage="optional" name="source"/>
+    <structure map-as="ns2:meta" field="meta" usage="optional" name="meta"/>
+    <collection item-type="com.funambol.framework.core.AbstractCommand" field="commands" usage="optional"/>
+    <value style="attribute" name="numberOfChanges" field="numberOfChanges"/>
+  </mapping>
+  <mapping extends="com.funambol.framework.core.AbstractCommand" class="com.funambol.framework.core.Sync" name="sync">
+    <structure map-as="ns2:sync"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:syncBody" class="com.funambol.framework.core.SyncBody">
+    <collection item-type="com.funambol.framework.core.AbstractCommand" field="commands" usage="optional"/>
+    <value style="attribute" name="finalMsg" field="finalMsg" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.SyncBody" name="syncBody">
+    <structure map-as="ns2:syncBody"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:syncCap" class="com.funambol.framework.core.SyncCap">
+    <collection field="syncTypes" usage="optional">
+      <structure map-as="ns2:syncType" name="syncType"/>
+    </collection>
+  </mapping>
+  <mapping class="com.funambol.framework.core.SyncCap" name="syncCap">
+    <structure map-as="ns2:syncCap"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:syncHdr" class="com.funambol.framework.core.SyncHdr">
+    <structure map-as="ns2:verDTD" field="verDTD" usage="optional" name="verDTD"/>
+    <structure map-as="ns2:verProto" field="verProto" usage="optional" name="verProto"/>
+    <structure map-as="ns2:sessionID" field="sessionID" usage="optional" name="sessionID"/>
+    <value style="element" name="msgID" field="msgID" usage="optional"/>
+    <structure map-as="ns2:target" field="target" usage="optional" name="target"/>
+    <structure map-as="ns2:source" field="source" usage="optional" name="source"/>
+    <value style="element" name="respURI" field="respURI" usage="optional"/>
+    <value style="attribute" name="noResp" field="noResp" usage="optional"/>
+    <structure map-as="ns2:cred" field="cred" usage="optional" name="cred"/>
+    <structure map-as="ns2:meta" field="meta" usage="optional" name="meta"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.SyncHdr" name="syncHdr">
+    <structure map-as="ns2:syncHdr"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:syncML" class="com.funambol.framework.core.SyncML">
+    <structure map-as="ns2:syncHdr" field="header" usage="optional" name="header"/>
+    <structure map-as="ns2:syncBody" field="body" usage="optional" name="body"/>
+    <value style="attribute" name="lastMessage" field="lastMessage"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.SyncML" name="syncML">
+    <structure map-as="ns2:syncML"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:target" class="com.funambol.framework.core.Target">
+    <value style="element" name="locURI" field="locURI" usage="optional"/>
+    <value style="element" name="locName" field="locName" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.Target" name="target">
+    <structure map-as="ns2:target"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:targetRef" class="com.funambol.framework.core.TargetRef">
+    <value style="element" name="value" field="value" usage="optional"/>
+    <structure map-as="ns2:target" field="target" usage="optional" name="target"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.TargetRef" name="targetRef">
+    <structure map-as="ns2:targetRef"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:verDTD" class="com.funambol.framework.core.VerDTD">
+    <value style="element" name="value" field="value" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.VerDTD" name="verDTD">
+    <structure map-as="ns2:verDTD"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:verProto" class="com.funambol.framework.core.VerProto">
+    <value style="element" name="version" field="version" usage="optional"/>
+  </mapping>
+  <mapping class="com.funambol.framework.core.VerProto" name="verProto">
+    <structure map-as="ns2:verProto"/>
+  </mapping>
+  <mapping abstract="true" type-name="ns2:syncType" class="com.funambol.framework.core.SyncType">
+    <value style="attribute" name="syncType" field="syncType"/>
+  </mapping>
+</binding>
